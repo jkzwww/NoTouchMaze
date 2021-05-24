@@ -112,6 +112,7 @@ void AagentsMazeCharacter::BeginPlay()
 	//default values
 	HP = 100;
 	NumEnemy = 0;
+	PausePressed = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -127,8 +128,6 @@ void AagentsMazeCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	FInputActionBinding& toggle2 = PlayerInputComponent->BindAction("Start", IE_Pressed, this, &AagentsMazeCharacter::StartGame);
 	toggle2.bConsumeInput = false;
 
-	//Bind pause game
-	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AagentsMazeCharacter::PauseGame);
 
 	//Bind resume game
 	FInputActionBinding& toggle = InputComponent->BindAction("Resume", IE_Pressed, this, &AagentsMazeCharacter::ResumeGame);
@@ -137,6 +136,9 @@ void AagentsMazeCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	//Bind reset game
 	PlayerInputComponent->BindAction("Reset", IE_Pressed, this, &AagentsMazeCharacter::ResetGame);
 	*/
+
+	//Bind pause game
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AagentsMazeCharacter::PauseGame);
 
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -170,17 +172,6 @@ void AagentsMazeCharacter::StartGame()
 }
 
 
-void AagentsMazeCharacter::PauseGame()
-{
-	if (GEngine)
-	{
-		GEngine->ClearOnScreenDebugMessages();
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Blue, TEXT(" Game paused! Press 'O' to resume! "));
-	}
-	UGameplayStatics::SetGamePaused(this,true);
-}
-
-
 void AagentsMazeCharacter::ResumeGame()
 {
 	if (GEngine)
@@ -202,6 +193,14 @@ void AagentsMazeCharacter::ResetGame()
 	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 }
 */
+
+
+void AagentsMazeCharacter::PauseGame()
+{
+	PausePressed = true;
+	//UGameplayStatics::SetGamePaused(this, true);
+}
+
 void AagentsMazeCharacter::OnFire()
 {
 	// try and fire a projectile

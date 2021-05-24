@@ -119,13 +119,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
 		int WeaponType;
 
+	//track pause game event
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
+		bool PausePressed;
+
+	UFUNCTION(BlueprintPure)
+		bool GetPausePress() { return PausePressed; };
+
 protected:
 	
 	/** Start game*/
 	//void StartGame();
 	
 	/** Pause game */
-	//void PauseGame();
+		void PauseGame();
 
 	/** Resume game from pausing */
 	//void ResumeGame();
