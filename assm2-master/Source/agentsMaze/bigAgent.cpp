@@ -49,6 +49,7 @@ AbigAgent::AbigAgent()
 	//default variables
 	TargetCheckpoint = 0;
 	speed = 1.5;
+	
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +57,8 @@ void AbigAgent::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//reset hp
+	HP = 80;
 }
 
 // Called every frame
@@ -100,7 +103,7 @@ void AbigAgent::Tick(float DeltaTime)
 		}
 	}
 
-	/*
+	
 	//when hp drops below 0 by damage
 	if (HP <= 0)
 	{
@@ -115,7 +118,7 @@ void AbigAgent::Tick(float DeltaTime)
 
 		Destroy();
 	}
-	*/
+	
 }
 
 
@@ -142,7 +145,7 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
 		AagentsMazeProjectile* bullet = Cast<AagentsMazeProjectile>(OtherActor);
-		//HP -= bullet->Damage;
+		HP -= bullet->Damage;
 	}
 	else
 	{

@@ -116,7 +116,7 @@ void AtinyAgent::Tick(float DeltaTime)
 		}
 	}
 
-	/*
+	
 	if (HP <= 0)
 	{
 		if (GEngine)
@@ -129,7 +129,7 @@ void AtinyAgent::Tick(float DeltaTime)
 
 		Destroy();
 	}
-	*/
+	
 
 }
 
@@ -150,7 +150,7 @@ void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
 		AagentsMazeProjectile* bullet = Cast<AagentsMazeProjectile>(OtherActor);
-		//HP -= bullet->Damage;
+		HP -= bullet->Damage;
 	}
 	else
 	{

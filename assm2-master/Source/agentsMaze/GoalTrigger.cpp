@@ -26,6 +26,7 @@ void AGoalTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* O
     //if the overlapping actor is the specific actor we identified in the editor
     if (OtherActor && (OtherActor != this) && OtherActor == SpecificActor)
     {
+        /*
         if (GEngine)
         {
             GEngine->ClearOnScreenDebugMessages();
@@ -33,7 +34,18 @@ void AGoalTrigger::OnOverlapBegin(class AActor* OverlappedActor, class AActor* O
         }
 
         UKismetSystemLibrary::QuitGame(GetWorld(), nullptr, EQuitPreference::Background, true);
+        */
 
+        //trigger is game over
+        
+        AagentsMazeCharacter* myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
+
+        if (myPlayer)
+        {
+            myPlayer->isGameOver = true;
+        }
+        
+        
     }
 }
 

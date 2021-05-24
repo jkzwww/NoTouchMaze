@@ -6,6 +6,7 @@
 #include "Engine/TriggerVolume.h"
 #include "DrawDebugHelpers.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "agentsMazeCharacter.h"
 #include "GoalTrigger.generated.h"
 
 /**

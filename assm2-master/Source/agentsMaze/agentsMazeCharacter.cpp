@@ -113,6 +113,7 @@ void AagentsMazeCharacter::BeginPlay()
 	HP = 100;
 	NumEnemy = 0;
 	PausePressed = false;
+	isGameOver = false;
 }
 
 //////////////////////////////////////////////////////////////////////////

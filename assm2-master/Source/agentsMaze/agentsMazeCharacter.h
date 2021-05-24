@@ -126,6 +126,13 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool GetPausePress() { return PausePressed; };
 
+	//track game over
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
+		bool isGameOver;
+
+	UFUNCTION(BlueprintPure)
+		bool GetIsGameOver() { return isGameOver; };
+
 protected:
 	
 	/** Start game*/
