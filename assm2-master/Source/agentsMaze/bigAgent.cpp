@@ -16,6 +16,17 @@ AbigAgent::AbigAgent()
 	ForwardArrow->SetupAttachment(RootComponent);
 	ForwardArrow->bHiddenInGame = false;
 
+	//sphere trigger component
+	TriggerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("TriggerSphere"));
+	TriggerSphere->InitSphereRadius(200.f);
+	TriggerSphere->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerSphere->SetupAttachment(RootComponent);
+
+	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AbigAgent::OnOverlapBegin);
+	TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AbigAgent::OnOverlapEnd);
+
+
+
 	//set static mesh
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CapsuleVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule"));
 
@@ -52,6 +63,7 @@ AbigAgent::AbigAgent()
 	DefSpeed = speed;
 	stunTime = 0.3;
 	startStunSec = 10000000;
+
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +74,7 @@ void AbigAgent::BeginPlay()
 	//reset hp
 	HP = 80;
 	defHP = HP;
+
 }
 
 // Called every frame
@@ -181,12 +194,6 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 		*/
 	}
 
-	/*
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("HIT"));
-	}
-	*/
 
 }
 
@@ -196,3 +203,30 @@ void AbigAgent::ReceiveHit(UPrimitiveComponent* MyComp, AActor* OtherActor, UPri
 	GLog->Log(*OtherActor->GetName());
 }
 */
+
+void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this))// && OtherComp)
+	{
+		if (Cast<AagentsMazeCharacter>(OtherActor))
+		{
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
+
+		}
+		
+	}
+}
+
+void AbigAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && (OtherActor != this))// && OtherComp)
+	{
+		if (Cast<AagentsMazeCharacter>(OtherActor))
+		{
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
+
+		}
+	}
+}
