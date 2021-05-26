@@ -59,6 +59,7 @@ void AtinyAgent::BeginPlay()
 
 	//reset HP
 	HP = 50;
+	defHP = HP;
 }
 
 // Called every frame
@@ -170,6 +171,12 @@ void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 		//stun
 		startStunSec = currentSecond;
 		speed = 0;
+
+		//update HP percent
+		HPpercent = ((float)HP) / defHP;
+
+		//update dynamic material base on hp percent
+		DynamicMaterialInst->SetScalarParameterValue(FName("TinyAgentHP"), HPpercent);
 	}
 	else
 	{

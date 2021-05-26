@@ -71,6 +71,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int HP;
 
+	//default HP
+	int defHP;
+
+	//HP percent
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float HPpercent;
+
 	//get agent health points
 	UFUNCTION(BlueprintPure)
 		int GetAgentHP() { return HP; };

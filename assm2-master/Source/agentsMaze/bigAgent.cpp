@@ -60,7 +60,7 @@ void AbigAgent::BeginPlay()
 	Super::BeginPlay();
 	
 	//reset hp
-	HP = 100;
+	HP = 80;
 	defHP = HP;
 }
 
