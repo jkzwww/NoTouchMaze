@@ -60,7 +60,8 @@ void AbigAgent::BeginPlay()
 	Super::BeginPlay();
 	
 	//reset hp
-	HP = 80;
+	HP = 100;
+	defHP = HP;
 }
 
 // Called every frame
@@ -165,6 +166,12 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 		//stun
 		startStunSec = currentSecond;
 		speed = 0;
+
+		//update HP percent
+		HPpercent = ((float)HP) / defHP;
+
+		//update dynamic material base on hp percent
+		DynamicMaterialInst->SetScalarParameterValue(FName("AgentHP"), HPpercent);
 	}
 	else
 	{
