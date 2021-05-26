@@ -8,8 +8,8 @@ AbigAgent::AbigAgent()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	CapsuleVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
-	CapsuleVisual->SetupAttachment(RootComponent);
+	VisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
+	VisibleComponent->SetupAttachment(RootComponent);
 
 	//arrow component
 	ForwardArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
@@ -21,11 +21,11 @@ AbigAgent::AbigAgent()
 
 	if (CapsuleVisualAsset.Succeeded())
 	{
-		CapsuleVisual->SetStaticMesh(CapsuleVisualAsset.Object);
+		VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
 	}
 
 	//scale up as big agent
-	CapsuleVisual->SetWorldScale3D(FVector(4, 4, 4));
+	VisibleComponent->SetWorldScale3D(FVector(4, 4, 4));
 
 
 	//set material
@@ -35,15 +35,15 @@ AbigAgent::AbigAgent()
 	{
 		StoredMaterial = FoundMaterial.Object;
 	}
-	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, CapsuleVisual);
+	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, VisibleComponent);
 
-	CapsuleVisual->SetMaterial(0, DynamicMaterialInst);
+	VisibleComponent->SetMaterial(0, DynamicMaterialInst);
 
 	//collision set up
 	//CapsuleVisual->SetSimulatePhysics(true);
-	CapsuleVisual->SetNotifyRigidBodyCollision(true);
-	CapsuleVisual->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
-	CapsuleVisual->OnComponentHit.AddDynamic(this, &AbigAgent::OnHit);
+	VisibleComponent->SetNotifyRigidBodyCollision(true);
+	VisibleComponent->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
+	VisibleComponent->OnComponentHit.AddDynamic(this, &AbigAgent::OnHit);
 
 
 	//default variables

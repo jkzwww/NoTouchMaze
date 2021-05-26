@@ -30,7 +30,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//static mesh
-	UStaticMeshComponent* ConeVisual;
+	UStaticMeshComponent* VisibleComponent;
 	
 	//arrow component
 	UPROPERTY(VisibleAnywhere)

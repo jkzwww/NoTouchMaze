@@ -10,8 +10,8 @@ AtinyAgent::AtinyAgent()
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
-	ConeVisual = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
-	ConeVisual->SetupAttachment(RootComponent);
+	VisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
+	VisibleComponent->SetupAttachment(RootComponent);
 
 	//arrow component
 	ForwardArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
@@ -23,7 +23,7 @@ AtinyAgent::AtinyAgent()
 
 	if (ConeVisualAsset.Succeeded())
 	{
-		ConeVisual->SetStaticMesh(ConeVisualAsset.Object);
+		VisibleComponent->SetStaticMesh(ConeVisualAsset.Object);
 	}
 
 	//set material
@@ -33,14 +33,14 @@ AtinyAgent::AtinyAgent()
 	{
 		StoredMaterial = FoundMaterial.Object;
 	}
-	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, ConeVisual);
+	DynamicMaterialInst = UMaterialInstanceDynamic::Create(StoredMaterial, VisibleComponent);
 
-	ConeVisual->SetMaterial(0, DynamicMaterialInst);
+	VisibleComponent->SetMaterial(0, DynamicMaterialInst);
 
 	//collision set up
-	ConeVisual->SetNotifyRigidBodyCollision(true);
-	ConeVisual->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
-	ConeVisual->OnComponentHit.AddDynamic(this, &AtinyAgent::OnHit);
+	VisibleComponent->SetNotifyRigidBodyCollision(true);
+	VisibleComponent->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
+	VisibleComponent->OnComponentHit.AddDynamic(this, &AtinyAgent::OnHit);
 
 
 	//default variables

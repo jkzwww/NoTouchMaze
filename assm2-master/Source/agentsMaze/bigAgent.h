@@ -31,7 +31,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//static mesh
-	UStaticMeshComponent* CapsuleVisual;
+	UStaticMeshComponent* VisibleComponent;
 
 	//arrow component
 	UPROPERTY(VisibleAnywhere)
