@@ -46,6 +46,9 @@ AtinyAgent::AtinyAgent()
 	//default variables
 	TargetCheckpoint = 0;
 	speed = 2.5;
+	DefSpeed = speed;
+	stunTime = 0.5;
+	startStunSec = 10000000;
 }
 
 // Called when the game starts or when spawned
@@ -62,6 +65,9 @@ void AtinyAgent::BeginPlay()
 void AtinyAgent::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//update current second
+	currentSecond = GetWorld()->UWorld::GetRealTimeSeconds();
 
 	//get rotation direction
 	FVector RotateDirection = Checkpoints[TargetCheckpoint] - GetActorLocation();
@@ -116,7 +122,7 @@ void AtinyAgent::Tick(float DeltaTime)
 		}
 	}
 
-	
+	//HP under 0
 	if (HP <= 0)
 	{
 		if (GEngine)
@@ -128,6 +134,14 @@ void AtinyAgent::Tick(float DeltaTime)
 		MyChar->NumEnemy++;
 
 		Destroy();
+	}
+
+	//stun effect over
+	if (currentSecond - startStunSec > stunTime)
+	{
+		//resume speed
+		speed = DefSpeed;
+
 	}
 	
 
@@ -150,7 +164,12 @@ void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
 		AagentsMazeProjectile* bullet = Cast<AagentsMazeProjectile>(OtherActor);
+		//take damage
 		HP -= bullet->Damage;
+
+		//stun
+		startStunSec = currentSecond;
+		speed = 0;
 	}
 	else
 	{

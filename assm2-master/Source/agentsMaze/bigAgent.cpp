@@ -49,7 +49,9 @@ AbigAgent::AbigAgent()
 	//default variables
 	TargetCheckpoint = 0;
 	speed = 1.5;
-	
+	DefSpeed = speed;
+	stunTime = 0.3;
+	startStunSec = 10000000;
 }
 
 // Called when the game starts or when spawned
@@ -64,6 +66,10 @@ void AbigAgent::BeginPlay()
 // Called every frame
 void AbigAgent::Tick(float DeltaTime)
 {
+
+	//update current second
+	currentSecond = GetWorld()->UWorld::GetRealTimeSeconds();
+
 	Super::Tick(DeltaTime);
 
 	//get rotation direction
@@ -119,6 +125,13 @@ void AbigAgent::Tick(float DeltaTime)
 		Destroy();
 	}
 	
+	//stun effect over
+	if (currentSecond - startStunSec > stunTime)
+	{
+		//resume speed
+		speed = DefSpeed;
+
+	}
 }
 
 
@@ -145,7 +158,13 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
 		AagentsMazeProjectile* bullet = Cast<AagentsMazeProjectile>(OtherActor);
+		
+		//take damage
 		HP -= bullet->Damage;
+
+		//stun
+		startStunSec = currentSecond;
+		speed = 0;
 	}
 	else
 	{

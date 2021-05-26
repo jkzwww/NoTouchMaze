@@ -10,6 +10,7 @@
 #include "Materials/Material.h"
 #include "agentsMazeCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
 #include "bigAgent.generated.h"
 
 UCLASS()
@@ -54,6 +55,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		float speed;
 
+	//default speed;
+	float DefSpeed;
+
 	//hit event
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -83,4 +87,14 @@ public:
 	//get agent health points
 	UFUNCTION(BlueprintPure)
 		int GetAgentHP() { return HP; };
+
+	//track current time
+	float currentSecond;
+
+	//track start time of effects
+	float startStunSec;
+
+	//stun time
+	UPROPERTY(EditAnywhere)
+		float stunTime;
 };
