@@ -4,6 +4,9 @@
 // Sets default values
 AbigAgent::AbigAgent()
 {
+
+	AttackRadius = 400;
+
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -18,7 +21,7 @@ AbigAgent::AbigAgent()
 
 	//sphere trigger component
 	TriggerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("TriggerSphere"));
-	TriggerSphere->InitSphereRadius(200.f);
+	TriggerSphere->InitSphereRadius(AttackRadius);
 	TriggerSphere->SetCollisionProfileName(TEXT("Trigger"));
 	TriggerSphere->SetupAttachment(RootComponent);
 
@@ -29,11 +32,22 @@ AbigAgent::AbigAgent()
 
 	//set static mesh
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CapsuleVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Cone.Shape_Cone"));
 
+	VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
+
+	/*
 	if (CapsuleVisualAsset.Succeeded())
 	{
-		VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
+		CapsuleMesh = CapsuleVisualAsset.Object;
 	}
+	
+	if (ConeVisualAsset.Succeeded())
+	{
+		ConeMesh = ConeVisualAsset.Object;
+	}
+	*/
+
 
 	//scale up as big agent
 	VisibleComponent->SetWorldScale3D(FVector(4, 4, 4));
@@ -65,7 +79,7 @@ AbigAgent::AbigAgent()
 	startStunSec = 10000000;
 	MinDamage = 3;
 	MaxDamage = 12;
-	AttackRadius = 200;
+
 	startRadialAttack = false;
 	AttackFreq = 3;
 	attackInterval = 1.0 / AttackFreq;
@@ -81,6 +95,18 @@ void AbigAgent::BeginPlay()
 	//reset hp
 	HP = 80;
 	defHP = HP;
+
+	/*
+	if (!AttackType)
+	{
+		VisibleComponent->SetStaticMesh(CapsuleMesh);
+	}
+	else
+	{
+
+		VisibleComponent->SetStaticMesh(ConeMesh);
+	}
+	*/
 
 }
 
@@ -154,27 +180,37 @@ void AbigAgent::Tick(float DeltaTime)
 
 	}
 
-	//radial attack
-	if (startRadialAttack)
+
+	//attack by type
+	if (AttackType)
 	{
-		if (myPlayer)
+
+	}
+	else
+	{
+		//radial attack
+		if (startRadialAttack)
 		{
-			if (currentSecond - lastAttackSec > attackInterval)
+			if (myPlayer)
 			{
-				myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
+				if (currentSecond - lastAttackSec > attackInterval)
+				{
+					myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
 
-				float myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
 
-				if (myDamage < MinDamage) { myDamage = MinDamage; }
+					if (myDamage < MinDamage) { myDamage = MinDamage; }
 
-				myPlayer->HP -= int(myDamage);
+					myPlayer->HP -= myDamage;
 
-				lastAttackSec = currentSecond;
+					lastAttackSec = currentSecond;
+				}
+
 			}
 
 		}
-
 	}
+
 }
 
 

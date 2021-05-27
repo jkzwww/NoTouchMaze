@@ -13,6 +13,7 @@
 #include "Engine/World.h"
 #include "Components/SphereComponent.h"
 #include "DrawDebugHelpers.h"
+#include "agentsMazeProjectile.h"
 #include "bigAgent.generated.h"
 
 UCLASS()
@@ -34,6 +35,10 @@ public:
 
 	//static mesh
 	UStaticMeshComponent* VisibleComponent;
+
+	//store mesh
+	UStaticMesh* ConeMesh;
+	UStaticMesh* CapsuleMesh;
 
 	//arrow component
 	UPROPERTY(VisibleAnywhere)
@@ -82,6 +87,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Attack)
 		float AttackRadius;
+
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class AagentsMazeProjectile> ProjectileClass;
 
 	//agent hp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
