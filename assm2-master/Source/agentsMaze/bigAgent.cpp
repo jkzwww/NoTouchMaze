@@ -63,6 +63,9 @@ AbigAgent::AbigAgent()
 	DefSpeed = speed;
 	stunTime = 0.3;
 	startStunSec = 10000000;
+	MinDamage = 3;
+	MaxDamage = 12;
+	AttackRadius = 200;
 
 }
 
@@ -167,7 +170,7 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("You're caught by the agent!!"));
 		}
 		
-		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+		//UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
@@ -213,7 +216,18 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
 
+			AagentsMazeCharacter* myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
+
+			float myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
+
+			float myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+
+			if (myDamage < MinDamage) { myDamage = MinDamage; }
+
+			myPlayer->HP -= int(myDamage);
 		}
+
+
 		
 	}
 }
