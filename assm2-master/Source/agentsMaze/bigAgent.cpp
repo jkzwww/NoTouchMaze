@@ -66,6 +66,10 @@ AbigAgent::AbigAgent()
 	MinDamage = 3;
 	MaxDamage = 12;
 	AttackRadius = 200;
+	startRadialAttack = false;
+	AttackFreq = 3;
+	attackInterval = 1.0 / AttackFreq;
+	lastAttackSec = 0;
 
 }
 
@@ -149,6 +153,28 @@ void AbigAgent::Tick(float DeltaTime)
 		speed = DefSpeed;
 
 	}
+
+	//radial attack
+	if (startRadialAttack)
+	{
+		if (myPlayer)
+		{
+			if (currentSecond - lastAttackSec > attackInterval)
+			{
+				myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
+
+				float myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+
+				if (myDamage < MinDamage) { myDamage = MinDamage; }
+
+				myPlayer->HP -= int(myDamage);
+
+				lastAttackSec = currentSecond;
+			}
+
+		}
+
+	}
 }
 
 
@@ -216,15 +242,14 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
 
-			AagentsMazeCharacter* myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
-
-			float myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
-
-			float myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
-
-			if (myDamage < MinDamage) { myDamage = MinDamage; }
-
-			myPlayer->HP -= int(myDamage);
+			myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
+		
+			if (!startRadialAttack) 
+			{ 
+				startRadialAttack = true; 
+				lastAttackSec = currentSecond;
+			}
+			
 		}
 
 
@@ -241,6 +266,7 @@ void AbigAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
 
+			startRadialAttack = false;
 		}
 	}
 }

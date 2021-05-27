@@ -139,7 +139,7 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 
 			if (Target->HP < 100)
 			{
-				Target->HP += 20;
+				Target->HP += 20; 
 				if (Target->HP > 100)
 				{
 					Target->HP = 100;

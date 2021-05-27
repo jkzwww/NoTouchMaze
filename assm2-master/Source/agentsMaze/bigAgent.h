@@ -121,4 +121,14 @@ public:
 	// declare overlap end function
 	UFUNCTION()
 		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//track attack
+	bool startRadialAttack;
+	float attackInterval;
+	float lastAttackSec;
+	float myDistance;
+	AagentsMazeCharacter* myPlayer;
+
+
+
 };
