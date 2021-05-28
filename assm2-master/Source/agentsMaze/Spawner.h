@@ -9,6 +9,7 @@
 #include "tinyAgent.h"
 #include "bigAgent.h"
 #include "TimerManager.h"
+#include "AgentBullet.h"
 #include "Spawner.generated.h"
 
 UCLASS()
@@ -100,7 +101,7 @@ public:
 
 	//agent projectile
 	UPROPERTY(EditAnywhere, Category = Attack)
-		TSubclassOf<class AagentsMazeProjectile> ProjectileClass;
+		TSubclassOf<class AAgentBullet> ProjectileClass;
 
 	//agent radial damage
 	UPROPERTY(EditAnywhere, Category = Attack)

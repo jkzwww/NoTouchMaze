@@ -4,7 +4,7 @@
 // Sets default values
 AbigAgent::AbigAgent()
 {
-
+	//default attack radius
 	AttackRadius = 400;
 
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -27,8 +27,6 @@ AbigAgent::AbigAgent()
 
 	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AbigAgent::OnOverlapBegin);
 	TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AbigAgent::OnOverlapEnd);
-
-
 
 	//set static mesh
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CapsuleVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule"));
@@ -62,15 +60,19 @@ AbigAgent::AbigAgent()
 	TargetCheckpoint = 0;
 	speed = 1.5;
 	DefSpeed = speed;
+	
 	stunTime = 0.3;
 	startStunSec = 10000000;
+	
 	MinDamage = 3;
 	MaxDamage = 12;
+	AttackFreq = 3;
 
 	startRadialAttack = false;
-	AttackFreq = 3;
 	attackInterval = 1.0 / AttackFreq;
 	lastAttackSec = 0;
+
+	GunOffset = FVector(50.0f, 0.0f, 10.0f);
 
 }
 
@@ -329,14 +331,14 @@ void AbigAgent::Shoot(AagentsMazeCharacter* target)
 		{
 			const FRotator SpawnRotation = GetActorRotation();
 
-			const FVector SpawnLocation = GetActorLocation();
+			const FVector SpawnLocation = GetActorLocation() + GunOffset;
 
 			//Set Spawn Collision Handling Override
 			FActorSpawnParameters ActorSpawnParams;
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			// spawn the projectile at the muzzle
-			World->SpawnActor<AagentsMazeProjectile>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			World->SpawnActor<AAgentBullet>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("shooting"));

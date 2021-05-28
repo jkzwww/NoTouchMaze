@@ -88,6 +88,12 @@ void ASpawner::Tick(float DeltaTime)
 						AbigAgent* tempRef2 = GetWorld()->UWorld::SpawnActor<AbigAgent>(AbigAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
 
 						tempRef2->AttackType = attackStyle;
+						tempRef2->myProjectile = ProjectileClass;
+
+						tempRef2->MinDamage = MinDamage;
+						tempRef2->MaxDamage = MaxDamage;
+						tempRef2->AttackFreq = AttackFreq;
+						tempRef2->AttackRadius = AttackRadius;
 
 						for (int k = 0; k < AllPathPoints[i].Num(); k++)
 						{

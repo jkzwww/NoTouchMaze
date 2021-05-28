@@ -14,6 +14,7 @@
 #include "Components/SphereComponent.h"
 #include "DrawDebugHelpers.h"
 #include "agentsMazeProjectile.h"
+#include "AgentBullet.h"
 #include "bigAgent.generated.h"
 
 UCLASS()
@@ -131,7 +132,7 @@ public:
 
 	/** Projectile class to spawn */
 	UPROPERTY(EditAnywhere, Category = Projectile)
-		TSubclassOf<class AagentsMazeProjectile> myProjectile;
+		TSubclassOf<class AAgentBullet> myProjectile;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
