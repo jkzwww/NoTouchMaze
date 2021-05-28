@@ -95,6 +95,8 @@ void ASpawner::Tick(float DeltaTime)
 						tempRef2->AttackFreq = AttackFreq;
 						tempRef2->AttackRadius = AttackRadius;
 
+						tempRef2->fireRate = FireRate;
+
 						for (int k = 0; k < AllPathPoints[i].Num(); k++)
 						{
 							tempRef2->addCheckPoint(AllPathPoints[i][k]);

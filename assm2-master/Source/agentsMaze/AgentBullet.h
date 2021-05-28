@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "agentsMazeCharacter.h"
 #include "AgentBullet.generated.h"
 
 class USphereComponent;

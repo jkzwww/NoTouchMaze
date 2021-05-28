@@ -127,6 +127,10 @@ public:
 
 	float attackInterval;
 	float lastAttackSec;
+
+	float fireRate;
+	float fireInterval;
+
 	float myDistance;
 	AagentsMazeCharacter* myPlayer;
 
@@ -142,5 +146,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector GunOffset;
 
-	void Shoot(AagentsMazeCharacter* target);
+	void Shoot(int myDamage);
 };

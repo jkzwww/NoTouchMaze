@@ -100,8 +100,12 @@ public:
 	FTimerHandle StartTimerHandle;
 
 	//agent projectile
-	UPROPERTY(EditAnywhere, Category = Attack)
+	UPROPERTY(EditAnywhere, Category = Shoot)
 		TSubclassOf<class AAgentBullet> ProjectileClass;
+
+	//agent shooting 
+	UPROPERTY(EditAnywhere, Category = Shoot)
+		float FireRate;
 
 	//agent radial damage
 	UPROPERTY(EditAnywhere, Category = Attack)

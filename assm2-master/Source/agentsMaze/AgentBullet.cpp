@@ -56,6 +56,14 @@ void AAgentBullet::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+		AagentsMazeCharacter* target = Cast<AagentsMazeCharacter>(OtherActor);
+
+		if (target)
+		{
+			target->HP -= Damage;
+		}
+
+
 		Destroy();
 	}
 }

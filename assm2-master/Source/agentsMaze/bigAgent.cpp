@@ -72,6 +72,9 @@ AbigAgent::AbigAgent()
 	attackInterval = 1.0 / AttackFreq;
 	lastAttackSec = 0;
 
+	startShooting = false;
+	fireInterval = 1.0 / fireRate;
+
 	GunOffset = FVector(50.0f, 0.0f, 10.0f);
 
 }
@@ -169,14 +172,55 @@ void AbigAgent::Tick(float DeltaTime)
 
 	}
 
-
+	if (myPlayer)
+	{
+		myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
+	}
+	
 	//attack by type
 	if (AttackType)
 	{
-		if (myPlayer)
+	
+		if (startShooting)
 		{
-			Shoot(myPlayer);
+			//get rotation direction
+			FVector TargetRotateDirection = myPlayer->GetActorLocation() - GetActorLocation();
+
+			FVector TYawDir = TargetRotateDirection;
+			TYawDir.Z = 0;
+			TYawDir.Normalize();
+
+			//get yaw degree
+			float TDot = FVector::DotProduct(Forward, TYawDir);
+			float TDet = Forward.X * TYawDir.Y + Forward.Y * TYawDir.X;
+			float TRad = FMath::Atan2(TDet, TDot);
+			float TDeg = FMath::RadiansToDegrees(TRad);
+
+			//rotate
+			FRotator TRotator(0, TDeg, 0);
+			FQuat TRotationQuaternion = FQuat(TRotator);
+			SetActorRotation(TRotationQuaternion);
+
+			if (myPlayer)
+			{
+				if (currentSecond - lastAttackSec > fireInterval)
+				{
+					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+
+					if (myDamage < MinDamage) { myDamage = MinDamage; }
+
+					Shoot(myDamage);
+
+					lastAttackSec = currentSecond;
+				}
+
+				if (myPlayer->HP <= 0)
+				{
+					startShooting = false;
+				}
+			}
 		}
+		
 	}
 	else
 	{
@@ -187,8 +231,6 @@ void AbigAgent::Tick(float DeltaTime)
 			{
 				if (currentSecond - lastAttackSec > attackInterval)
 				{
-					myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
-
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
 
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
@@ -271,13 +313,25 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
 
 			myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
-		
-			if (!startRadialAttack) 
-			{ 
-				startRadialAttack = true; 
-				lastAttackSec = currentSecond;
-			}
 			
+			if (AttackType)
+			{
+				if (!startShooting && myPlayer->HP > 0)
+				{
+					startShooting = true;
+					lastAttackSec = currentSecond;
+				}
+			}
+			else
+			{
+				if (!startRadialAttack)
+				{
+					startRadialAttack = true;
+					lastAttackSec = currentSecond;
+				}
+
+			}
+	
 		}
 
 
@@ -295,33 +349,13 @@ void AbigAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
 
 			startRadialAttack = false;
+			startShooting = false;
 		}
 	}
 }
 
-void AbigAgent::Shoot(AagentsMazeCharacter* target)
+void AbigAgent::Shoot(int myDamage)
 {
-	//get rotation direction
-	FVector RotateDirection = target->GetActorLocation() - GetActorLocation();
-
-	FVector YawDir = RotateDirection;
-	YawDir.Z = 0;
-	YawDir.Normalize();
-
-	//forward vector
-	FVector Forward = FVector(1, 0, 0);
-
-	//get yaw degree
-	float Dot2 = FVector::DotProduct(Forward, YawDir);
-	float Det2 = Forward.X * YawDir.Y + Forward.Y * YawDir.X;
-	float Rad2 = FMath::Atan2(Det2, Dot2);
-	float Degrees2 = FMath::RadiansToDegrees(Rad2);
-
-	//rotate
-	FRotator Rotator(0, Degrees2, 0);
-	FQuat RotationQuaternion = FQuat(Rotator);
-	SetActorRotation(RotationQuaternion);
-
 
 	// try and fire a projectile
 	if (myProjectile != nullptr)
@@ -338,7 +372,8 @@ void AbigAgent::Shoot(AagentsMazeCharacter* target)
 			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
 			// spawn the projectile at the muzzle
-			World->SpawnActor<AAgentBullet>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			AAgentBullet* tempBullet = World->SpawnActor<AAgentBullet>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			tempBullet->Damage = myDamage;
 
 			if (GEngine)
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("shooting"));
