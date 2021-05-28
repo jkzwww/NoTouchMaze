@@ -97,6 +97,7 @@ AbigAgent::AbigAgent()
 
 	GunOffset = FVector(50.0f, 0.0f, 10.0f);
 
+	myValue = 15;
 }
 
 // Called when the game starts or when spawned
@@ -169,7 +170,8 @@ void AbigAgent::Tick(float DeltaTime)
 		AagentsMazeCharacter* MyChar = Cast<AagentsMazeCharacter>(PlayerChar);
 
 		MyChar->NumEnemy++;
-	
+		MyChar->MyCoins += myValue;
+
 		UGameplayStatics::PlaySoundAtLocation(this, BangEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplodeParticleSystem, GetActorLocation(),FRotator::ZeroRotator, true);
 		Destroy();

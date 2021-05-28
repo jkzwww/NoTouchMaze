@@ -34,6 +34,9 @@ class AGENTSMAZE_API APickup : public AActor
 	UPROPERTY(EditAnywhere)
 		UMaterial* ShieldMaterial;
 
+	UPROPERTY(EditAnywhere)
+		UMaterial* CoinMaterial;
+
 	//player target
 	AagentsMazeCharacter* Target;
 	float WalkSpeed;
@@ -48,6 +51,9 @@ class AGENTSMAZE_API APickup : public AActor
 	//effect time
 	UPROPERTY(EditAnywhere)
 		float EffectTime = 5;
+
+	//currency value
+	int myValue;
 
 public:	
 	// Sets default values for this actor's properties

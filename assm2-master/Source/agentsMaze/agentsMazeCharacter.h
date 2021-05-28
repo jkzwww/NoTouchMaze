@@ -136,6 +136,15 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool GetIsGameOver() { return isGameOver; };
 
+	//track currency
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
+		int MyCoins;
+
+	UFUNCTION(BlueprintPure)
+		int GetMyCoins() { return MyCoins; };
+
+
+
 protected:
 	
 	/** Start game*/

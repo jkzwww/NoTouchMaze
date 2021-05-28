@@ -24,10 +24,12 @@ APickup::APickup()
 	SpeedMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Speed Material"));
 	HealthMaterial = CreateDefaultSubobject<UMaterial>(TEXT("Health Material"));
 	ShieldMaterial = CreateDefaultSubobject <UMaterial>(TEXT("Shield Material"));
+	CoinMaterial = CreateDefaultSubobject <UMaterial>(TEXT("Coin Material"));
 
-	ConstructorHelpers::FObjectFinder<UMaterial> SpeedMaterialObject(TEXT("/Game/StarterContent/Materials/M_Metal_Gold.M_Metal_Gold"));
+	ConstructorHelpers::FObjectFinder<UMaterial> CoinMaterialObject(TEXT("/Game/StarterContent/Materials/M_Metal_Gold.M_Metal_Gold"));
 	ConstructorHelpers::FObjectFinder<UMaterial> HealthMaterialObject(TEXT("/Game/StarterContent/Materials/M_Ground_Moss.M_Ground_Moss"));
 	ConstructorHelpers::FObjectFinder<UMaterial> ShieldMaterialObject(TEXT("/Game/StarterContent/Materials/M_Water_Lake.M_Water_Lake"));
+	ConstructorHelpers::FObjectFinder<UMaterial> SpeedMaterialObject(TEXT("/Game/StarterContent/Materials/M_ColorGrid_LowSpec.M_ColorGrid_LowSpec"));
 
 	if (SpeedMaterialObject.Succeeded())
 	{
@@ -45,6 +47,11 @@ APickup::APickup()
 		ShieldMaterial = ShieldMaterialObject.Object;
 	}
 
+	if (CoinMaterialObject.Succeeded())
+	{
+		CoinMaterial = CoinMaterialObject.Object;
+	}
+
 	//set actor rotation (aesthetic purpose)
 	SetActorRotation(FRotator(90, 0, 0));
 
@@ -60,6 +67,9 @@ APickup::APickup()
 	{
 		CollectSound = PickupSoundAsset.Object;
 	}
+
+	//default value
+	myValue = 5;
 }
 
 // Called when the game starts or when spawned
@@ -79,6 +89,10 @@ void APickup::BeginPlay()
 
 	case 2:
 		VisibleComponent->SetMaterial(0, ShieldMaterial);
+		break;
+
+	default:
+		VisibleComponent->SetMaterial(0, CoinMaterial);
 		break;
 	}
 }
@@ -177,6 +191,14 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 			startShieldSec = currentSecond;
 			Target->armorFactor -= 0.3;
 
+			break;
+
+		default: //coin pickup
+			if (GEngine) { GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, TEXT("Extra 5 coins collected!!!")); }
+
+			Target->MyCoins += myValue;
+
+			Destroy();
 			break;
 		}
 

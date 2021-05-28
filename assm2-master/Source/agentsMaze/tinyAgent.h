@@ -148,4 +148,7 @@ public:
 
 	//particle effect
 	UParticleSystem* ExplodeParticleSystem;
+
+	//currency value
+	int myValue;
 };
