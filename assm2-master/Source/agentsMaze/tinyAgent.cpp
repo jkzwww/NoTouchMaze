@@ -54,6 +54,14 @@ AtinyAgent::AtinyAgent()
 	VisibleComponent->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
 	VisibleComponent->OnComponentHit.AddDynamic(this, &AtinyAgent::OnHit);
 
+	//sound effect
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> ExplosionSoundAsset(TEXT("/Game/StarterContent/Audio/Explosion01.Explosion01"));
+
+	if (ExplosionSoundAsset.Succeeded())
+	{
+		BangEffect = ExplosionSoundAsset.Object;
+	}
 
 	//default variables
 	TargetCheckpoint = 0;
@@ -143,6 +151,8 @@ void AtinyAgent::Tick(float DeltaTime)
 		AagentsMazeCharacter* MyChar = Cast<AagentsMazeCharacter>(PlayerChar);
 
 		MyChar->NumEnemy++;
+
+		UGameplayStatics::PlaySoundAtLocation(this, BangEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
 
 		Destroy();
 	}

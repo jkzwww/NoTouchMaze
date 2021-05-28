@@ -53,6 +53,13 @@ APickup::APickup()
 	VisibleComponent->BodyInstance.SetCollisionProfileName("BlockAllDynamic");
 	VisibleComponent->OnComponentHit.AddDynamic(this, &APickup::OnHit);
 	
+	//sound effect
+	static ConstructorHelpers::FObjectFinder<USoundBase> PickupSoundAsset(TEXT("/Game/myContent/pickup.pickup"));
+
+	if (PickupSoundAsset.Succeeded())
+	{
+		CollectSound = PickupSoundAsset.Object;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -157,6 +164,9 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 
 			break;
 		}
+
+
+		UGameplayStatics::PlaySoundAtLocation(this, CollectSound, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
 
 		//destroy itself as picked up
 		Destroy();

@@ -37,10 +37,6 @@ public:
 	//static mesh
 	UStaticMeshComponent* VisibleComponent;
 
-	//store mesh
-	UStaticMesh* ConeMesh;
-	UStaticMesh* CapsuleMesh;
-
 	//arrow component
 	UPROPERTY(VisibleAnywhere)
 		UArrowComponent* ForwardArrow;
@@ -147,4 +143,8 @@ public:
 		FVector GunOffset;
 
 	void Shoot(int myDamage);
+
+	//sound effect
+	USoundBase* BangEffect;
+
 };

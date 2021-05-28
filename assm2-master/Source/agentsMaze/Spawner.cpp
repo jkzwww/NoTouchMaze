@@ -23,6 +23,15 @@ ASpawner::ASpawner()
 	SpawnInterval = 5;
 	StartTime = 2;
 
+	//sound effect
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> SpawnSoundAsset(TEXT("/Game/myContent/spawn.spawn"));
+
+	if (SpawnSoundAsset.Succeeded())
+	{
+		SpawnSound = SpawnSoundAsset.Object;
+	}
+
 
 }
 
@@ -75,6 +84,8 @@ void ASpawner::Tick(float DeltaTime)
 					{
 						AtinyAgent* tempRef = GetWorld()->UWorld::SpawnActor<AtinyAgent>(AtinyAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
 
+						UGameplayStatics::PlaySoundAtLocation(this, SpawnSound, tempRef->GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
+
 						tempRef->AttackType = attackStyle;
 						tempRef->myProjectile = ProjectileClass;
 
@@ -94,6 +105,8 @@ void ASpawner::Tick(float DeltaTime)
 					else
 					{
 						AbigAgent* tempRef2 = GetWorld()->UWorld::SpawnActor<AbigAgent>(AbigAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
+
+						UGameplayStatics::PlaySoundAtLocation(this, SpawnSound, tempRef2->GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
 
 						tempRef2->AttackType = attackStyle;
 						tempRef2->myProjectile = ProjectileClass;

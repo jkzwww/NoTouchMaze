@@ -142,4 +142,8 @@ public:
 		FVector GunOffset;
 
 	void Shoot(int myDamage);
+
+	//sound effect
+	USoundBase* BangEffect;
+
 };

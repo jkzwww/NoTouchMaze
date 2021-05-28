@@ -10,6 +10,7 @@
 #include "bigAgent.h"
 #include "TimerManager.h"
 #include "AgentBullet.h"
+#include "Kismet/GameplayStatics.h"
 #include "Spawner.generated.h"
 
 UCLASS()
@@ -119,4 +120,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Attack)
 		float AttackRadius;
+
+
+	//sound effect
+	USoundBase* SpawnSound;
 };
