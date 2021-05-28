@@ -118,6 +118,8 @@ void ASpawner::Tick(float DeltaTime)
 
 						tempRef2->fireRate = FireRate;
 
+						tempRef2->ExplodeParticleSystem = ExplosionParticle;
+
 						for (int k = 0; k < AllPathPoints[i].Num(); k++)
 						{
 							tempRef2->addCheckPoint(AllPathPoints[i][k]);

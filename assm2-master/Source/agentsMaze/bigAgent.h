@@ -15,6 +15,7 @@
 #include "DrawDebugHelpers.h"
 #include "agentsMazeProjectile.h"
 #include "AgentBullet.h"
+#include "ParticleDefinitions.h"
 #include "bigAgent.generated.h"
 
 UCLASS()
@@ -147,4 +148,6 @@ public:
 	//sound effect
 	USoundBase* BangEffect;
 
+	//particle effect
+	UParticleSystem* ExplodeParticleSystem;
 };

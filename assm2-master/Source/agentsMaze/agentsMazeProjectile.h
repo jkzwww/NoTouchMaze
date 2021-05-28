@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "agentsMazeProjectile.generated.h"
 
 class USphereComponent;
@@ -36,5 +37,8 @@ public:
 
 	//default damage
 	int  Damage = 10;
+
+	//sound effect
+	USoundBase* HitEffect;
 };
 

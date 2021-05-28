@@ -66,6 +66,16 @@ AbigAgent::AbigAgent()
 		BangEffect = ExplosionSoundAsset.Object;
 	}
 
+	//particle effect
+	/*
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ExplosionPartAsset(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"));
+
+	if (ExplosionPartAsset.Succeeded())
+	{
+		ExplodeParticleSystem = ExplosionPartAsset.Object;
+	}
+	*/
+
 	//default variables
 	TargetCheckpoint = 0;
 	speed = 1.5;
@@ -161,7 +171,7 @@ void AbigAgent::Tick(float DeltaTime)
 		MyChar->NumEnemy++;
 	
 		UGameplayStatics::PlaySoundAtLocation(this, BangEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
-
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplodeParticleSystem, GetActorLocation(),FRotator::ZeroRotator, true);
 		Destroy();
 	}
 	
@@ -269,7 +279,7 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("You're caught by the agent!!"));
 		}
 		
-		//UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{

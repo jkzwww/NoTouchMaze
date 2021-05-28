@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "agentsMazeProjectile.h"
+#include "UObject/ConstructorHelpers.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -27,17 +28,29 @@ AagentsMazeProjectile::AagentsMazeProjectile()
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 
-	// Die after 3 seconds by default
-	InitialLifeSpan = 3.0f;
+	// Die after 1 seconds by default
+	InitialLifeSpan = 1.0f;
+
+
+	//sound effect
+
+	static ConstructorHelpers::FObjectFinder<USoundBase> HitSoundAsset(TEXT("/Game/myContent/bullethit.bullethit"));
+
+	if (HitSoundAsset.Succeeded())
+	{
+		HitEffect = HitSoundAsset.Object;
+	}
 }
 
 void AagentsMazeProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
-	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 
+	//if hit any target altho not simulating physics
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) //&& OtherComp->IsSimulatingPhysics())
+	{
+		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, HitEffect, GetActorLocation(), 2.0F, 1.0F, 0.0F, nullptr, nullptr);
 		Destroy();
 	}
+
 }

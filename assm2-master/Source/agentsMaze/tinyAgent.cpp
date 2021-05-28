@@ -251,7 +251,7 @@ void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("You're caught by the agent!!"));
 		}
 
-		//UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{

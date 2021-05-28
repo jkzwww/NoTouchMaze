@@ -121,6 +121,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = Attack)
 		float AttackRadius;
 
+	UPROPERTY(EditAnywhere, Category = Effect)
+		UParticleSystem* ExplosionParticle;
+
+	UPROPERTY(EditAnywhere, Category = Effect)
+		UParticleSystem* SpawnParticle;
 
 	//sound effect
 	USoundBase* SpawnSound;
