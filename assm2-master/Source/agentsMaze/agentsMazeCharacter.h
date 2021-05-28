@@ -108,6 +108,7 @@ public:
 		int GetCharHP() { return HP; };
 
 	//armor factor
+	UPROPERTY(EditAnywhere, Category = Gamestats)
 	float armorFactor;
 
 	/** Defeated enemies count */
@@ -117,10 +118,6 @@ public:
 	//get number of enemies destroyed
 	UFUNCTION(BlueprintPure)
 		int GetNumEnemy() { return NumEnemy; };
-
-	/** Character weapon type */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
-		int WeaponType;
 
 	//track pause game event
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
@@ -143,8 +140,31 @@ public:
 	UFUNCTION(BlueprintPure)
 		int GetMyCoins() { return MyCoins; };
 
+	//damageBuff
+	int damageBuff;
 
+	UFUNCTION(BlueprintCallable,Category = Upgrade)
+		void addDamage() { damageBuff = 7; };
 
+	//add grenade
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Upgrade)
+		int GrenadeNum;
+
+	//speed buff
+	UFUNCTION(BlueprintCallable, Category = Upgrade)
+		void doubleSpeed() { GetCharacterMovement()->MaxWalkSpeed *= 2; };
+
+	//add shield
+	UFUNCTION(BlueprintCallable, Category = Upgrade)
+		void addShield() { armorFactor = 0.7; }
+
+	//add health
+	UFUNCTION(BlueprintCallable, Category = Upgrade)
+		void addHealth() 
+		{	
+			if ((HP += 25) > 100) { HP = 100; }
+			else { HP += 25; }
+		}
 protected:
 	
 	/** Start game*/
