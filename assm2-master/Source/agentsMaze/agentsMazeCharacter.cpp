@@ -114,6 +114,7 @@ void AagentsMazeCharacter::BeginPlay()
 	NumEnemy = 0;
 	PausePressed = false;
 	isGameOver = false;
+	armorFactor = 1.0;
 }
 
 //////////////////////////////////////////////////////////////////////////

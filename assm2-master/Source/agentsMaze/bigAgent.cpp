@@ -197,6 +197,7 @@ void AbigAgent::Tick(float DeltaTime)
 				if (currentSecond - lastAttackSec > fireInterval)
 				{
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+					myDamage *= myPlayer->armorFactor;
 
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
 
@@ -223,6 +224,7 @@ void AbigAgent::Tick(float DeltaTime)
 				if (currentSecond - lastAttackSec > attackInterval)
 				{
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+					myDamage *= myPlayer->armorFactor;
 
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
 

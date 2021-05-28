@@ -189,7 +189,7 @@ void AtinyAgent::Tick(float DeltaTime)
 				if (currentSecond - lastAttackSec > fireInterval)
 				{
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
-
+					myDamage *= myPlayer->armorFactor;
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
 
 					Shoot(myDamage);
@@ -215,7 +215,7 @@ void AtinyAgent::Tick(float DeltaTime)
 				if (currentSecond - lastAttackSec > attackInterval)
 				{
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
-
+					myDamage *= myPlayer->armorFactor;
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
 
 					myPlayer->HP -= myDamage;

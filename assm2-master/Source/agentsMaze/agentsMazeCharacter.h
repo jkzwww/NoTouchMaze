@@ -107,6 +107,9 @@ public:
 	UFUNCTION(BlueprintPure)
 		int GetCharHP() { return HP; };
 
+	//armor factor
+	float armorFactor;
+
 	/** Defeated enemies count */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gamestats)
 		int NumEnemy;

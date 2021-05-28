@@ -98,6 +98,7 @@ void APickup::Tick(float DeltaTime)
 		if (currentSecond - startShieldSec > EffectTime)
 		{
 			//resume damage
+			Target->armorFactor += 0.3;
 		}
 
 	}
@@ -152,6 +153,7 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 			if (GEngine) { GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("Shield collected !\nDamage received decreased for 5s !!!")); }
 
 			startShieldSec = currentSecond;
+			Target->armorFactor -= 0.3;
 
 			break;
 		}
