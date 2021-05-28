@@ -1,0 +1,17 @@
+https://freesound.org/people/Anuj_Shrestha1/sounds/440136/
+//bullet hit
+
+https://freesound.org/people/GabrielAraujo/sounds/242501/
+//pickup
+
+https://freesound.org/people/dland/sounds/320181/
+//popup
+
+https://freesound.org/people/bradwesson/sounds/135936/
+//coin
+
+https://freesound.org/people/LloydEvans09/sounds/187024/
+//spawn
+
+https://freesound.org/people/Marregheriti/sounds/266105/
+//shotgun

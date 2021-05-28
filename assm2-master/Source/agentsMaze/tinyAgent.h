@@ -146,4 +146,6 @@ public:
 	//sound effect
 	USoundBase* BangEffect;
 
+	//particle effect
+	UParticleSystem* ExplodeParticleSystem;
 };

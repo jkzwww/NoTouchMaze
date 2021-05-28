@@ -85,6 +85,7 @@ void ASpawner::Tick(float DeltaTime)
 						AtinyAgent* tempRef = GetWorld()->UWorld::SpawnActor<AtinyAgent>(AtinyAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
 
 						UGameplayStatics::PlaySoundAtLocation(this, SpawnSound, tempRef->GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticle, tempRef->GetActorLocation(), FRotator::ZeroRotator, true);
 
 						tempRef->AttackType = attackStyle;
 						tempRef->myProjectile = ProjectileClass;
@@ -95,6 +96,8 @@ void ASpawner::Tick(float DeltaTime)
 						tempRef->AttackRadius = AttackRadius;
 
 						tempRef->fireRate = FireRate;
+
+						tempRef->ExplodeParticleSystem = ExplosionParticle;
 
 						for (int j = 0; j < AllPathPoints[i].Num(); j++)
 						{
@@ -107,7 +110,8 @@ void ASpawner::Tick(float DeltaTime)
 						AbigAgent* tempRef2 = GetWorld()->UWorld::SpawnActor<AbigAgent>(AbigAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
 
 						UGameplayStatics::PlaySoundAtLocation(this, SpawnSound, tempRef2->GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
-
+						UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), SpawnParticle, tempRef2->GetActorLocation(), FRotator::ZeroRotator, true);
+						
 						tempRef2->AttackType = attackStyle;
 						tempRef2->myProjectile = ProjectileClass;
 

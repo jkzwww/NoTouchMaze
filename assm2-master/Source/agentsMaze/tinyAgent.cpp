@@ -153,7 +153,7 @@ void AtinyAgent::Tick(float DeltaTime)
 		MyChar->NumEnemy++;
 
 		UGameplayStatics::PlaySoundAtLocation(this, BangEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
-
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplodeParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
 		Destroy();
 	}
 
