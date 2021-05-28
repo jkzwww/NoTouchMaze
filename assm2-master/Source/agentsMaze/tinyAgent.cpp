@@ -6,12 +6,24 @@
 // Sets default values
 AtinyAgent::AtinyAgent()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	//default attack radius
+	AttackRadius = 300;
+
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	VisibleComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
 	VisibleComponent->SetupAttachment(RootComponent);
+
+	//sphere trigger component
+	TriggerSphere = CreateDefaultSubobject<USphereComponent>(TEXT("TriggerSphere"));
+	TriggerSphere->InitSphereRadius(AttackRadius);
+	TriggerSphere->SetCollisionProfileName(TEXT("Trigger"));
+	TriggerSphere->SetupAttachment(RootComponent);
+
+	TriggerSphere->OnComponentBeginOverlap.AddDynamic(this, &AtinyAgent::OnOverlapBegin);
+	TriggerSphere->OnComponentEndOverlap.AddDynamic(this, &AtinyAgent::OnOverlapEnd);
 
 	//arrow component
 	ForwardArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
@@ -47,15 +59,29 @@ AtinyAgent::AtinyAgent()
 	TargetCheckpoint = 0;
 	speed = 2.5;
 	DefSpeed = speed;
+
 	stunTime = 0.5;
 	startStunSec = 10000000;
+	
+	MinDamage = 3;
+	MaxDamage = 12;
+	AttackFreq = 3;
+
+	startRadialAttack = false;
+	attackInterval = 1.0 / AttackFreq;
+	lastAttackSec = 0;
+
+	startShooting = false;
+	fireInterval = 1.0 / fireRate;
+
+	GunOffset = FVector(50.0f, 0.0f, 10.0f);
+
 }
 
 // Called when the game starts or when spawned
 void AtinyAgent::BeginPlay()
 {
 	Super::BeginPlay();
-
 
 	//reset HP
 	HP = 50;
@@ -81,22 +107,6 @@ void AtinyAgent::Tick(float DeltaTime)
 
 	//forward vector
 	FVector Forward = FVector(1, 0, 0);
-
-	/*
-	//up vector
-	FVector Up = FVector(0, 0, 1);
-
-	//agent front
-	FVector agentFront = GetActorForwardVector();
-	PitchDir.X = agentFront.X;
-	PitchDir.X = agentFront.Y;
-
-	//get pitch degree
-	float Dot = FVector::DotProduct(agentFront,PitchDir);
-	float Det = agentFront.X * PitchDir.Y + agentFront.Y * PitchDir.X;
-	float Rad = FMath::Atan2(Det, Dot);
-	float Degrees = FMath::RadiansToDegrees(Rad);
-	*/
 
 	//get yaw degree
 	float Dot2 = FVector::DotProduct(Forward, YawDir);
@@ -145,7 +155,78 @@ void AtinyAgent::Tick(float DeltaTime)
 
 	}
 	
+	if (myPlayer)
+	{
+		myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
+	}
 
+	//attack by type
+	if (AttackType)
+	{
+
+		if (startShooting)
+		{
+			//get rotation direction
+			FVector TargetRotateDirection = myPlayer->GetActorLocation() - GetActorLocation();
+
+			FVector TYawDir = TargetRotateDirection;
+			TYawDir.Z = 0;
+			TYawDir.Normalize();
+
+			//get yaw degree
+			float TDot = FVector::DotProduct(Forward, TYawDir);
+			float TDet = Forward.X * TYawDir.Y + Forward.Y * TYawDir.X;
+			float TRad = FMath::Atan2(TDet, TDot);
+			float TDeg = FMath::RadiansToDegrees(TRad);
+
+			//rotate
+			FRotator TRotator(0, TDeg, 0);
+			FQuat TRotationQuaternion = FQuat(TRotator);
+			SetActorRotation(TRotationQuaternion);
+
+			if (myPlayer)
+			{
+				if (currentSecond - lastAttackSec > fireInterval)
+				{
+					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+
+					if (myDamage < MinDamage) { myDamage = MinDamage; }
+
+					Shoot(myDamage);
+
+					lastAttackSec = currentSecond;
+				}
+
+				if (myPlayer->HP <= 0)
+				{
+					startShooting = false;
+				}
+			}
+		}
+
+	}
+	else
+	{
+		//radial attack
+		if (startRadialAttack)
+		{
+			if (myPlayer)
+			{
+				if (currentSecond - lastAttackSec > attackInterval)
+				{
+					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+
+					if (myDamage < MinDamage) { myDamage = MinDamage; }
+
+					myPlayer->HP -= myDamage;
+
+					lastAttackSec = currentSecond;
+				}
+
+			}
+
+		}
+	}
 }
 
 void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -160,7 +241,7 @@ void AtinyAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UP
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("You're caught by the agent!!"));
 		}
 
-		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+		//UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	}
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
@@ -195,3 +276,83 @@ void AtinyAgent::addCheckPoint(FVector givenCheckpoint)
 	Checkpoints.Add(givenCheckpoint);
 }
 
+
+void AtinyAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor && (OtherActor != this))// && OtherComp)
+	{
+		if (Cast<AagentsMazeCharacter>(OtherActor))
+		{
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
+
+			myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
+
+			if (AttackType)
+			{
+				if (!startShooting && myPlayer->HP > 0)
+				{
+					startShooting = true;
+					lastAttackSec = currentSecond;
+				}
+			}
+			else
+			{
+				if (!startRadialAttack)
+				{
+					startRadialAttack = true;
+					lastAttackSec = currentSecond;
+				}
+
+			}
+
+		}
+
+
+
+	}
+}
+
+void AtinyAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor && (OtherActor != this))// && OtherComp)
+	{
+		if (Cast<AagentsMazeCharacter>(OtherActor))
+		{
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
+
+			startRadialAttack = false;
+			startShooting = false;
+		}
+	}
+}
+
+void AtinyAgent::Shoot(int myDamage)
+{
+
+	// try and fire a projectile
+	if (myProjectile != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			const FRotator SpawnRotation = GetActorRotation();
+
+			const FVector SpawnLocation = GetActorLocation() + GunOffset;
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// spawn the projectile at the muzzle
+			AAgentBullet* tempBullet = World->SpawnActor<AAgentBullet>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			tempBullet->Damage = myDamage;
+
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("shooting"));
+		}
+
+	}
+
+}

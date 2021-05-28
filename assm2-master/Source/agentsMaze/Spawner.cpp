@@ -76,6 +76,14 @@ void ASpawner::Tick(float DeltaTime)
 						AtinyAgent* tempRef = GetWorld()->UWorld::SpawnActor<AtinyAgent>(AtinyAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
 
 						tempRef->AttackType = attackStyle;
+						tempRef->myProjectile = ProjectileClass;
+
+						tempRef->MinDamage = MinDamage;
+						tempRef->MaxDamage = MaxDamage;
+						tempRef->AttackFreq = AttackFreq;
+						tempRef->AttackRadius = AttackRadius;
+
+						tempRef->fireRate = FireRate;
 
 						for (int j = 0; j < AllPathPoints[i].Num(); j++)
 						{

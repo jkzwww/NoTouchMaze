@@ -30,9 +30,11 @@ AbigAgent::AbigAgent()
 
 	//set static mesh
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CapsuleVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_NarrowCapsule.Shape_NarrowCapsule"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Cone.Shape_Cone"));
 
-	VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
+	if (CapsuleVisualAsset.Succeeded())
+	{
+		VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
+	}
 
 	//scale up as big agent
 	VisibleComponent->SetWorldScale3D(FVector(4, 4, 4));
@@ -88,17 +90,6 @@ void AbigAgent::BeginPlay()
 	HP = 80;
 	defHP = HP;
 
-	/*
-	if (!AttackType)
-	{
-		VisibleComponent->SetStaticMesh(CapsuleMesh);
-	}
-	else
-	{
-
-		VisibleComponent->SetStaticMesh(ConeMesh);
-	}
-	*/
 
 }
 

@@ -10,6 +10,11 @@
 #include "Materials/Material.h"
 #include "agentsMazeCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "Components/SphereComponent.h"
+#include "DrawDebugHelpers.h"
+#include "agentsMazeProjectile.h"
+#include "AgentBullet.h"
 #include "tinyAgent.generated.h"
 
 UCLASS()
@@ -36,6 +41,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		UArrowComponent* ForwardArrow;
 
+	//trigger component
+	USphereComponent* TriggerSphere;
+
 	//materials
 	UMaterial* StoredMaterial;
 
@@ -58,14 +66,16 @@ public:
 	//default speed;
 	float DefSpeed;
 
-	//hit event
-	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-	
 	//agent attack type 
 	//0 - radius , 1 - bullet
 	UPROPERTY(EditAnywhere)
 		int AttackType;
+
+	//agent radial damage
+	int MinDamage;
+	int MaxDamage;
+	int AttackFreq;
+	float AttackRadius;
 
 	//agent hp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -92,4 +102,44 @@ public:
 	UPROPERTY(EditAnywhere)
 		float stunTime;
 
+	//hit event
+	UFUNCTION()
+		void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	//overlap events
+
+	// declare overlap begin function
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// declare overlap end function
+	UFUNCTION()
+		void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//track attack
+	bool startRadialAttack;
+	bool startShooting;
+
+	float attackInterval;
+	float lastAttackSec;
+
+	float fireRate;
+	float fireInterval;
+
+	float myDistance;
+	AagentsMazeCharacter* myPlayer;
+
+	/** Projectile class to spawn */
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		TSubclassOf<class AAgentBullet> myProjectile;
+
+	/** Sound to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		USoundBase* FireSound;
+
+	/** Gun muzzle's offset from the characters location */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector GunOffset;
+
+	void Shoot(int myDamage);
 };
