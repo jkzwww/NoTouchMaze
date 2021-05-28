@@ -76,21 +76,10 @@ public:
 		int AttackType;
 
 	//agent radial damage
-	UPROPERTY(EditAnywhere, Category = Attack)
-		int MinDamage;
-
-	UPROPERTY(EditAnywhere, Category = Attack)
-		int MaxDamage;
-
-	UPROPERTY(EditAnywhere, Category = Attack)
-		int AttackFreq;
-
-	UPROPERTY(EditAnywhere, Category = Attack)
-		float AttackRadius;
-
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class AagentsMazeProjectile> ProjectileClass;
+	int MinDamage;
+	int MaxDamage;
+	int AttackFreq;
+	float AttackRadius;
 
 	//agent hp
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -133,11 +122,24 @@ public:
 
 	//track attack
 	bool startRadialAttack;
+	bool startShooting;
+
 	float attackInterval;
 	float lastAttackSec;
 	float myDistance;
 	AagentsMazeCharacter* myPlayer;
 
+	/** Projectile class to spawn */
+	UPROPERTY(EditAnywhere, Category = Projectile)
+		TSubclassOf<class AagentsMazeProjectile> myProjectile;
 
+	/** Sound to play each time we fire */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		USoundBase* FireSound;
 
+	/** Gun muzzle's offset from the characters location */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector GunOffset;
+
+	void Shoot(AagentsMazeCharacter* target);
 };

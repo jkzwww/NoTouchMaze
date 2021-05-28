@@ -65,6 +65,14 @@ public:
 		TArray<FVector> Path3;
 
 
+	//Arrays of path data objects
+	TArray<int>AllPathMaxObj;
+
+	TArray<TArray<FVector>> AllPathPoints;
+
+	TArray<int>AllPathNumObj; 
+
+
 	//Variables to handle spawning
 	bool StartSpawning = false;
 	float SpawnCountdown;
@@ -90,4 +98,20 @@ public:
 	//Timer Handle
 	FTimerHandle StartTimerHandle;
 
+	//agent projectile
+	UPROPERTY(EditAnywhere, Category = Attack)
+		TSubclassOf<class AagentsMazeProjectile> ProjectileClass;
+
+	//agent radial damage
+	UPROPERTY(EditAnywhere, Category = Attack)
+		int MinDamage;
+
+	UPROPERTY(EditAnywhere, Category = Attack)
+		int MaxDamage;
+
+	UPROPERTY(EditAnywhere, Category = Attack)
+		int AttackFreq;
+
+	UPROPERTY(EditAnywhere, Category = Attack)
+		float AttackRadius;
 };

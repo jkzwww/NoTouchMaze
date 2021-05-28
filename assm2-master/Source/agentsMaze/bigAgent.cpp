@@ -36,19 +36,6 @@ AbigAgent::AbigAgent()
 
 	VisibleComponent->SetStaticMesh(CapsuleVisualAsset.Object);
 
-	/*
-	if (CapsuleVisualAsset.Succeeded())
-	{
-		CapsuleMesh = CapsuleVisualAsset.Object;
-	}
-	
-	if (ConeVisualAsset.Succeeded())
-	{
-		ConeMesh = ConeVisualAsset.Object;
-	}
-	*/
-
-
 	//scale up as big agent
 	VisibleComponent->SetWorldScale3D(FVector(4, 4, 4));
 
@@ -184,7 +171,10 @@ void AbigAgent::Tick(float DeltaTime)
 	//attack by type
 	if (AttackType)
 	{
-
+		if (myPlayer)
+		{
+			Shoot(myPlayer);
+		}
 	}
 	else
 	{
@@ -305,4 +295,53 @@ void AbigAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 			startRadialAttack = false;
 		}
 	}
+}
+
+void AbigAgent::Shoot(AagentsMazeCharacter* target)
+{
+	//get rotation direction
+	FVector RotateDirection = target->GetActorLocation() - GetActorLocation();
+
+	FVector YawDir = RotateDirection;
+	YawDir.Z = 0;
+	YawDir.Normalize();
+
+	//forward vector
+	FVector Forward = FVector(1, 0, 0);
+
+	//get yaw degree
+	float Dot2 = FVector::DotProduct(Forward, YawDir);
+	float Det2 = Forward.X * YawDir.Y + Forward.Y * YawDir.X;
+	float Rad2 = FMath::Atan2(Det2, Dot2);
+	float Degrees2 = FMath::RadiansToDegrees(Rad2);
+
+	//rotate
+	FRotator Rotator(0, Degrees2, 0);
+	FQuat RotationQuaternion = FQuat(Rotator);
+	SetActorRotation(RotationQuaternion);
+
+
+	// try and fire a projectile
+	if (myProjectile != nullptr)
+	{
+		UWorld* const World = GetWorld();
+		if (World != nullptr)
+		{
+			const FRotator SpawnRotation = GetActorRotation();
+
+			const FVector SpawnLocation = GetActorLocation();
+
+			//Set Spawn Collision Handling Override
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+			// spawn the projectile at the muzzle
+			World->SpawnActor<AagentsMazeProjectile>(myProjectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+			if (GEngine)
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("shooting"));
+		}
+
+	}
+
 }

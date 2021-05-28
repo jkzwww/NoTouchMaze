@@ -33,6 +33,13 @@ void ASpawner::BeginPlay()
 	UpdateTimerDisplay();
 	GetWorldTimerManager().SetTimer(StartTimerHandle, this, &ASpawner::AdvanceTimer, 1.0f, true);
 
+
+	//Arrays of path data objects
+	AllPathMaxObj = { maxObjPath1,maxObjPath2,maxObjPath3 };
+
+	AllPathPoints = { Path1,Path2,Path3 };
+
+	AllPathNumObj = { numObject1,numObject2,numObject3 };
 }
 
 // Called every frame
@@ -54,109 +61,43 @@ void ASpawner::Tick(float DeltaTime)
 				//spawn
 				//add checkpoints
 
-			//path 1
-			if (numObject1 < maxObjPath1)
-			{
-				int myAgent = FMath::RandRange(0, 1);
-				int attackStyle = FMath::RandRange(0, 1);
-
-				if (!myAgent)
-				{
-					AtinyAgent* tempRef = GetWorld()->SpawnActor<AtinyAgent>(TinyObject, this->GetActorLocation(), FRotator::ZeroRotator);
-
-					tempRef->AttackType = attackStyle;
-
-					for (int i = 0; i < Path1.Num(); i++)
-					{
-						tempRef->addCheckPoint(Path1[i]);
-					}
-
-				}
-				else
-				{
-					AbigAgent* tempRef2 = GetWorld()->SpawnActor<AbigAgent>(BigObject, this->GetActorLocation(), FRotator::ZeroRotator);
-
-					tempRef2->AttackType = attackStyle;
-
-					for (int i = 0; i < Path1.Num(); i++)
-					{
-						tempRef2->addCheckPoint(Path1[i]);
-					}
-				}
-
-				numObject1++;
-			}
-		
 			
-			//path 2
-			if (numObject2 < maxObjPath2)
+			//loop version, warning : SpawnActor failed because no class was specified
+			for (int i = 0; i < 3; i++)
 			{
-				int myAgent = FMath::RandRange(0, 1);
-				int attackStyle = FMath::RandRange(0, 1);
 
-				if (!myAgent)
+				if (AllPathNumObj[i] < AllPathMaxObj[i])
 				{
-					AtinyAgent* tempRef = GetWorld()->SpawnActor<AtinyAgent>(TinyObject, this->GetActorLocation(), FRotator::ZeroRotator);
+					int myAgent = FMath::RandRange(0, 1);
+					int attackStyle = FMath::RandRange(0, 1);
 
-					tempRef->AttackType = attackStyle;
-
-					for (int i = 0; i < Path2.Num(); i++)
+					if (!myAgent)
 					{
-						tempRef->addCheckPoint(Path2[i]);
+						AtinyAgent* tempRef = GetWorld()->UWorld::SpawnActor<AtinyAgent>(AtinyAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
+
+						tempRef->AttackType = attackStyle;
+
+						for (int j = 0; j < AllPathPoints[i].Num(); j++)
+						{
+							tempRef->addCheckPoint(AllPathPoints[i][j]);
+						}
+
+					}
+					else
+					{
+						AbigAgent* tempRef2 = GetWorld()->UWorld::SpawnActor<AbigAgent>(AbigAgent::StaticClass(), this->GetActorLocation(), FRotator::ZeroRotator);
+
+						tempRef2->AttackType = attackStyle;
+
+						for (int k = 0; k < AllPathPoints[i].Num(); k++)
+						{
+							tempRef2->addCheckPoint(AllPathPoints[i][k]);
+						}
 					}
 
+					AllPathNumObj[i]++;
 				}
-				else
-				{
-					AbigAgent* tempRef2 = GetWorld()->SpawnActor<AbigAgent>(BigObject, this->GetActorLocation(), FRotator::ZeroRotator);
-
-					tempRef2->AttackType = attackStyle;
-
-					for (int i = 0; i < Path2.Num(); i++)
-					{
-						tempRef2->addCheckPoint(Path2[i]);
-					}
-				}
-
-
-
-				numObject2++;
 			}
-				
-
-			//path 3
-			if (numObject3 < maxObjPath3)
-			{
-				int myAgent = FMath::RandRange(0, 1);
-				int attackStyle = FMath::RandRange(0, 1);
-
-				if (!myAgent)
-				{
-					AtinyAgent* tempRef = GetWorld()->SpawnActor<AtinyAgent>(TinyObject, this->GetActorLocation(), FRotator::ZeroRotator);
-
-					tempRef->AttackType = attackStyle;
-
-					for (int i = 0; i < Path3.Num(); i++)
-					{
-						tempRef->addCheckPoint(Path3[i]);
-					}
-
-				}
-				else
-				{
-					AbigAgent* tempRef2 = GetWorld()->SpawnActor<AbigAgent>(BigObject, this->GetActorLocation(), FRotator::ZeroRotator);
-
-					tempRef2->AttackType = attackStyle;
-
-					for (int i = 0; i < Path3.Num(); i++)
-					{
-						tempRef2->addCheckPoint(Path3[i]);
-					}
-				}
-
-				numObject3++;
-			}
-
 
 			//reset countdown
 			SpawnCountdown = SpawnInterval;
