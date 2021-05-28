@@ -98,16 +98,20 @@ void APickup::Tick(float DeltaTime)
 		{
 			//resume speed
 			Target->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
-
+			//destroy itself as picked up
+			Destroy();
 		}
-
+	
 		//shield effect is over
 		if (currentSecond - startShieldSec > EffectTime)
 		{
 			//resume damage
 			Target->armorFactor += 0.3;
+			//destroy itself as picked up
+			Destroy();
 		}
-
+		
+	
 	}
 
 }
@@ -121,6 +125,16 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 		{
 			GEngine->ClearOnScreenDebugMessages();
 		}
+
+		UGameplayStatics::PlaySoundAtLocation(this, CollectSound, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
+
+		//UGameplayStatics::SpawnEmitterAttached(PickedUpParticle, Target->GetRootComponent(), NAME_None, Target->GetActorLocation(), FRotator::ZeroRotator, EAttachLocation::SnapToTarget, false);
+		
+		//offset
+		FVector offset = FVector(0, 0, 30);
+		
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PickedUpParticle, GetActorLocation() + offset, FRotator::ZeroRotator, true);
+
 
 		Target = Cast<AagentsMazeCharacter>(OtherActor);
 
@@ -138,7 +152,6 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 
 			//double speed
 			Target->GetCharacterMovement()->MaxWalkSpeed = WalkSpeed * 2;
-
 			break;
 
 		case 1: //increase health if not full
@@ -153,6 +166,8 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 					Target->HP = 100;
 				}
 			}
+			//destroy itself as picked up
+			Destroy();
 			break;
 
 		case 2: //activate shield
@@ -165,11 +180,8 @@ void APickup::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrim
 			break;
 		}
 
-
-		UGameplayStatics::PlaySoundAtLocation(this, CollectSound, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
-
-		//destroy itself as picked up
-		Destroy();
+		SetActorHiddenInGame(true);
+	
 
 	}
 	else

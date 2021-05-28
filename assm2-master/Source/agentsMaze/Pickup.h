@@ -68,4 +68,9 @@ public:
 
 	//sound effect
 	USoundBase* CollectSound;
+
+	//particle effect
+	UPROPERTY(EditAnywhere, Category = Effect)
+		UParticleSystem* PickedUpParticle;
+
 };
