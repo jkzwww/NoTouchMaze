@@ -177,6 +177,9 @@ protected:
 	/** Fires a projectile. */
 	void OnFire();
 
+	//throws a grenade
+	void Bomb();
+
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 

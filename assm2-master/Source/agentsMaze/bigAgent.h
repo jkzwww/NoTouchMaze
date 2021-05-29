@@ -45,12 +45,11 @@ public:
 	//trigger component
 	USphereComponent* TriggerSphere;
 
-
 	//material
 	UMaterial* StoredMaterial;
 
 	UMaterialInstanceDynamic* DynamicMaterialInst;
-
+ 
 	//checkpoint to move to
 	int TargetCheckpoint;
 

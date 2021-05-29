@@ -149,6 +149,9 @@ void AagentsMazeCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AagentsMazeCharacter::OnFire);
 
+	//Bind bomb event
+	PlayerInputComponent->BindAction("Bomb", IE_Pressed, this, &AagentsMazeCharacter::Bomb);
+
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
 
@@ -201,6 +204,11 @@ void AagentsMazeCharacter::PauseGame()
 {
 	PausePressed = true;
 	//UGameplayStatics::SetGamePaused(this, true);
+}
+
+void AagentsMazeCharacter::Bomb()
+{
+	
 }
 
 void AagentsMazeCharacter::OnFire()
