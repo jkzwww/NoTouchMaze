@@ -140,11 +140,6 @@ public:
 	UFUNCTION(BlueprintPure)
 		int GetMyCoins() { return MyCoins; };
 
-	//damageBuff
-	int damageBuff;
-
-	UFUNCTION(BlueprintCallable,Category = Upgrade)
-		void addDamage() { damageBuff = 7; };
 
 	//add grenade
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Upgrade)

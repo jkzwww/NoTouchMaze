@@ -115,7 +115,6 @@ void AagentsMazeCharacter::BeginPlay()
 	PausePressed = false;
 	isGameOver = false;
 	armorFactor = 1.0;
-	damageBuff = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -209,13 +208,7 @@ void AagentsMazeCharacter::OnFire()
 	// try and fire a projectile
 	if (ProjectileClass != nullptr)
 	{
-		AagentsMazeProjectile* myProjectile = Cast<AagentsMazeProjectile>(ProjectileClass);
-		
-		if (damageBuff)
-		{
-			myProjectile->Damage += damageBuff;
-			damageBuff = 0;
-		}
+	
 		UWorld* const World = GetWorld();
 		if (World != nullptr)
 		{
