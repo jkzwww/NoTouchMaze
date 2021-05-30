@@ -189,6 +189,19 @@ void AbigAgent::Tick(float DeltaTime)
 	{
 		myDistance = FVector::Dist(GetActorLocation(), myPlayer->GetActorLocation());
 	}
+
+	if (myGrenade)
+	{
+
+		if (myGrenade->isExplode)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, BangEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplodeParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
+			Destroy();
+		}
+
+	}
+	
 	
 	//attack by type
 	if (AttackType)
@@ -324,8 +337,8 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 	{
 		if (Cast<AagentsMazeCharacter>(OtherActor))
 		{
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
+			//if (GEngine)
+				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("attack triggered"));
 
 			myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
 			
@@ -348,6 +361,12 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 			}
 	
 		}
+		else if (Cast<AGrenade>(OtherActor))
+		{
+			
+			myGrenade = Cast<AGrenade>(OtherActor);
+
+		}
 
 
 		
@@ -360,8 +379,8 @@ void AbigAgent::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AA
 	{
 		if (Cast<AagentsMazeCharacter>(OtherActor))
 		{
-			if (GEngine)
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
+			//if (GEngine)
+				//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("stop attack"));
 
 			startRadialAttack = false;
 			startShooting = false;

@@ -61,6 +61,8 @@ AGrenade::AGrenade()
 	bombDelay = 0.8;
 
 	startSecond = 0;
+
+	isExplode = false;
 }
 
 // Called when the game starts or when spawned
@@ -88,6 +90,7 @@ void AGrenade::Tick(float DeltaTime)
 
 		UGameplayStatics::PlaySoundAtLocation(this, BombEffect, GetActorLocation(), 1.0F, 1.0F, 0.0F, nullptr, nullptr);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplodeParticleSystem, GetActorLocation(), FRotator::ZeroRotator, true);
+		isExplode = true;
 		Destroy();
 	}
 	
@@ -96,5 +99,9 @@ void AGrenade::Tick(float DeltaTime)
 
 void AGrenade::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
+	if (OtherActor && (OtherActor != this))// && OtherComp)
+	{
+		//if (Cast<AagentsMazeCharacter>(OtherActor))
+		
+	}
 }

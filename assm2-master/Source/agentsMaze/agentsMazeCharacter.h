@@ -17,6 +17,7 @@
 #include "GameFramework/PlayerState.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Grenade.h"
 #include "agentsMazeCharacter.generated.h"
 
 class UInputComponent;
@@ -86,6 +87,14 @@ public:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
 	TSubclassOf<class AagentsMazeProjectile> ProjectileClass;
+
+	//grenade class to spawn
+	UPROPERTY(EditAnywhere, Category = Grenade)
+		TSubclassOf<class AGrenade> GrenadeClass;
+
+	//grenade particle effect
+	UPROPERTY(EditAnywhere, Category = Grenade)
+		UParticleSystem* ExplosionParticle;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)

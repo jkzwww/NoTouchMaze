@@ -11,8 +11,7 @@
 #include "Engine/World.h"
 #include "Components/SphereComponent.h"
 #include "ParticleDefinitions.h"
-#include "bigAgent.h"
-#include "tinyAgent.h"
+
 #include "Grenade.generated.h"
 
 UCLASS()
@@ -46,6 +45,7 @@ public:
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	bool isExplode;
 
 protected:
 	// Called when the game starts or when spawned

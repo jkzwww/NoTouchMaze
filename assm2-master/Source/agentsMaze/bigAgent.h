@@ -8,7 +8,6 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Materials/Material.h"
-#include "agentsMazeCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Components/SphereComponent.h"
@@ -16,6 +15,7 @@
 #include "agentsMazeProjectile.h"
 #include "AgentBullet.h"
 #include "ParticleDefinitions.h"
+#include "agentsMazeCharacter.h"
 #include "bigAgent.generated.h"
 
 UCLASS()
@@ -152,4 +152,7 @@ public:
 
 	//currency value
 	int myValue;
+
+	//grenade detect
+	AGrenade* myGrenade;
 };

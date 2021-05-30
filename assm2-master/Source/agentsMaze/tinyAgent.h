@@ -15,6 +15,7 @@
 #include "DrawDebugHelpers.h"
 #include "agentsMazeProjectile.h"
 #include "AgentBullet.h"
+#include "Grenade.h"
 #include "tinyAgent.generated.h"
 
 UCLASS()
@@ -151,4 +152,7 @@ public:
 
 	//currency value
 	int myValue;
+
+	//grenade detect
+	AGrenade* myGrenade;
 };

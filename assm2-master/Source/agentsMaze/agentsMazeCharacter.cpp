@@ -208,7 +208,12 @@ void AagentsMazeCharacter::PauseGame()
 
 void AagentsMazeCharacter::Bomb()
 {
-	
+	if (GrenadeNum)
+	{
+		AGrenade* tempRef = GetWorld()->UWorld::SpawnActor<AGrenade>(AGrenade::StaticClass(),this->GetActorLocation() + (this->GetActorForwardVector()*700), FRotator::ZeroRotator);
+		tempRef->ExplodeParticleSystem = ExplosionParticle;
+		GrenadeNum--;
+	}
 }
 
 void AagentsMazeCharacter::OnFire()
