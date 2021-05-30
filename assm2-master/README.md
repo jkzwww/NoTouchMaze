@@ -24,4 +24,7 @@ Additional functionality
 - pickup effects
 - extra weapon: grenade
 
+Demonstration video :
+https://drive.google.com/drive/folders/1L1Nzv3do-eHwnMsSpciX1k-K5YXw-II7?usp=sharing
+
 
