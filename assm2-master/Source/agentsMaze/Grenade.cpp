@@ -101,7 +101,11 @@ void AGrenade::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class A
 {
 	if (OtherActor && (OtherActor != this))// && OtherComp)
 	{
-		//if (Cast<AagentsMazeCharacter>(OtherActor))
+		//if (Cast<Abigagent>(OtherActor))
 		
+		//should be checking for agents 
+		//but reference loop error will occur since character is referenced by the agent
+		//and the grenade is refereced by the character
+
 	}
 }

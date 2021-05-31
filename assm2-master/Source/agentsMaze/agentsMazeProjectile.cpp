@@ -49,6 +49,7 @@ void AagentsMazeProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr)) //&& OtherComp->IsSimulatingPhysics())
 	{
 		//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		//play sound when bullet hit target
 		UGameplayStatics::PlaySoundAtLocation(this, HitEffect, GetActorLocation(), 2.0F, 1.0F, 0.0F, nullptr, nullptr);
 		Destroy();
 	}

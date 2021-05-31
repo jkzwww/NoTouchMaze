@@ -254,17 +254,25 @@ void AbigAgent::Tick(float DeltaTime)
 		//radial attack
 		if (startRadialAttack)
 		{
+			//target exist
 			if (myPlayer)
 			{
+				//attack interval has reached
 				if (currentSecond - lastAttackSec > attackInterval)
 				{
+					//the nearer the player is the larger the damage
 					int myDamage = ((AttackRadius - myDistance) / AttackRadius) * MaxDamage;
+					
+					//reduce damage according to the player armor
 					myDamage *= myPlayer->armorFactor;
 
+					//ensure minimum damage
 					if (myDamage < MinDamage) { myDamage = MinDamage; }
 
+					//apply damage to player
 					myPlayer->HP -= myDamage;
 
+					//update attack second
 					lastAttackSec = currentSecond;
 				}
 
@@ -342,6 +350,7 @@ void AbigAgent::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class 
 
 			myPlayer = Cast<AagentsMazeCharacter>(OtherActor);
 			
+			//start attacking
 			if (AttackType)
 			{
 				if (!startShooting && myPlayer->HP > 0)

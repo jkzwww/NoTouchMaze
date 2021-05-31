@@ -199,13 +199,14 @@ void AagentsMazeCharacter::ResetGame()
 }
 */
 
-
+//pause game
 void AagentsMazeCharacter::PauseGame()
 {
 	PausePressed = true;
 	//UGameplayStatics::SetGamePaused(this, true);
 }
 
+//drop the grenade
 void AagentsMazeCharacter::Bomb()
 {
 	if (GrenadeNum)
