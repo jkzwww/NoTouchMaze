@@ -78,7 +78,7 @@ AbigAgent::AbigAgent()
 
 	//default variables
 	TargetCheckpoint = 0;
-	speed = 1.5;
+	speed =2.0;
 	DefSpeed = speed;
 	
 	stunTime = 0.3;
@@ -294,7 +294,7 @@ void AbigAgent::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPr
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, TEXT("You're caught by the agent!!"));
 		}
 		
-		UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
+		UGameplayStatics::OpenLevel(this, FName(GetWorld()->GetName()), false);
 	}
 	else if (Cast<AagentsMazeProjectile>(OtherActor))
 	{
